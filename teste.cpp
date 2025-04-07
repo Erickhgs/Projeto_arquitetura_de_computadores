@@ -24,7 +24,6 @@ void saidaArquivo(string IR, int PC, bitset<32> A, bitset<32> B, bitset<32> said
         arquivo << "co = " << vaiUm << endl;
         arquivo << "============================================================" << endl;
         
-        arquivo.close();
     } else {
         cerr << "Erro ao abrir o arquivo para escrita.\n";
     }
@@ -109,15 +108,14 @@ int main() {
 
             PC++;
             Ula(F0, F1, ENA, ENB, INVA, INC, IR, PC);
-        } else if (!linha.empty()) {
-            PC++;
-            ofstream arquivo_saida("saida_etapa1.txt", ios::app);
-            arquivo_saida << "Cycle " << PC << "\n\n";
-            arquivo_saida << "PC = " << PC << endl;
-            arquivo_saida << "> Line is empty, EOP." << endl;
-            arquivo_saida.close();
-        }
+        } 
     }
+
+    PC++;
+    ofstream arquivo_saida("saida_etapa1.txt", ios::app);
+    arquivo_saida << "Cycle " << PC << "\n\n";
+    arquivo_saida << "PC = " << PC << endl;
+    arquivo_saida << "> Line is empty, EOP." << endl;
 
     arquivo.close();
 

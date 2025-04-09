@@ -101,8 +101,8 @@ void Ula(bool SLL8, bool SRA1, bool F0, bool F1, bool ENA, bool ENB, bool INVA, 
         throw runtime_error("ERRO");
     }
 
-    Z = (saida.none());
-    N = saida[31];
+    Z = (saidaD.none());
+    N = saidaD[31];
 
     
     saidaArquivo(IR, PC, A_operando, B_operando, saida, saidaD, N, Z, vaiUm);
@@ -151,6 +151,7 @@ int main() {
                 arquivo_saida << "PC = " << PC << endl;
                 arquivo_saida << "IR = " << IR << endl;
                 arquivo_saida << "> Error, invalid control signals." << endl;
+                arquivo_saida << "============================================================" << endl;
             }           
         } 
     }

@@ -36,8 +36,8 @@ void saidaArquivo(string IR, int PC, bitset<32> A, bitset<32> B, bitset<32> said
 
 void Ula(bool SLL8, bool SRA1, bool F0, bool F1, bool ENA, bool ENB, bool INVA, bool INC, string IR, int PC) {
     
-    static bitset<32> A(0xFFFFFFFF); 
-    static bitset<32> B(1);       
+    static bitset<32> A(0x00000001);     
+    static bitset<32> B(0x80000000);          
     
     bitset<32> A_operando = A;
     bitset<32> B_operando = B; 
@@ -79,7 +79,7 @@ void Ula(bool SLL8, bool SRA1, bool F0, bool F1, bool ENA, bool ENB, bool INVA, 
         vaiUm = soma >> 32;
     }
 
-    bool N, Z;
+    bool N = 0, Z = 0;
     bitset<32> saidaD;
 
     if(!SLL8 && !SRA1) {
@@ -88,28 +88,21 @@ void Ula(bool SLL8, bool SRA1, bool F0, bool F1, bool ENA, bool ENB, bool INVA, 
     else if(!SLL8 && SRA1) {
         string aux;
         bool msb = saida[31];
-        string msbAux = msb ? "1" : 0;
-        aux = msbAux + saida.to_string();
+        string msbAux = msb ? "1" : "0";
+        string saidaStr = saida.to_string();
+        saidaStr = msbAux + saidaStr.substr(0, 31);
+        saidaD = bitset<32>(saidaStr);
 
-        bitset<32> saidaD(msbAux.substr(0, msbAux.size()-1));
     }
     else if(SLL8 && !SRA1) {
-        string aux;
-        aux = saida.to_string().substr(1, saida.size());
-        aux = aux + "0";
-
-        bitset<32> saidaD(aux);
+        saidaD = saida << 8;
     }
     else if(SLL8 && SRA1) {
         throw runtime_error("ERRO");
     }
 
-    if(saida.to_ulong() == 0) {
-        Z = 1;
-    }
-    if(saida.to_ulong() < 0) {
-        N = 1;
-    }
+    Z = (saida.none());
+    N = saida[31];
 
     
     saidaArquivo(IR, PC, A_operando, B_operando, saida, saidaD, N, Z, vaiUm);
@@ -135,8 +128,8 @@ int main() {
 
     while (getline(arquivo, linha)) {
 
-        if (linha.size() >= 6) {
-            string IR = linha.substr(0, 6);
+        if (linha.size() >= 8) {
+            string IR = linha.substr(0, 8);
 
             bool SLL8 = linha[0] - '0';
             bool SRA1 = linha[1] - '0';

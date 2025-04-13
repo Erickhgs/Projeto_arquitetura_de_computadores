@@ -6,33 +6,6 @@
 #include <exception>
 using namespace std;
 
-// void saidaArquivo(string IR, int PC, bitset<32> A, bitset<32> B, bitset<32> saida, bitset<32> saidaD, bool N, bool Z, bool vaiUm) {
-//     ofstream arquivo("saida_etapa2_tarefa2.txt", ios::app);
-//     if (arquivo.is_open()) {
-//         if (PC == 1) {
-//             arquivo << "b = " << B << endl;
-//             arquivo << "a = " << A << endl;
-//             arquivo << "\nStart of Program\n";
-//             arquivo << "============================================================" << endl;
-//         }
-        
-//         arquivo << "Cycle " << PC << "\n\n";
-//         arquivo << "PC = " << PC << endl;
-//         arquivo << "IR = " << IR << endl;
-//         arquivo << "b = " << B << endl;
-//         arquivo << "a = " << A << endl;
-//         arquivo << "s = " << saida << endl;
-//         arquivo << "sd = " << saidaD << endl;
-//         arquivo << "n = " << N << endl;
-//         arquivo << "z = " << Z << endl;
-//         arquivo << "co = " << vaiUm << endl;
-//         arquivo << "============================================================" << endl;
-        
-//     } else {
-//         cerr << "Erro ao abrir o arquivo para escrita.\n";
-//     }
-// }
-    
 
 string Ula(string IR, bitset<32> A, bitset<32> B) {
            
@@ -153,29 +126,17 @@ void set_ir(string instrucao){
     ir = instrucao;
 }
 
-string get_b_bus(){
-    string aux = ir.substr(17, 4);
-    if(aux == "0000") {
-        return "mbr";
-    } else if (aux == "0001") {
-        return "pc";
-    } else if (aux == "0010") {
-        return "mbr";
-    } else if (aux == "0011") {
-        return "mar";
-    } else if (aux == "0100") {
-        return "sp";
-    } else if (aux == "0101") {
-        return "lv";
-    } else if (aux == "0110") {
-        return "cpp";
-    } else if (aux == "0111") {
-        return "tos";
-    } else if (aux == "1000") {
-        return "opc";
-    } else {
-        throw runtime_error("Código inválido para barramento B.");
-    }
+string nomeBarramentoB(string codigo) {
+    if (codigo == "0000") return "mdr";
+    if (codigo == "0001") return "pc";
+    if (codigo == "0010") return "mbr";
+    if (codigo == "0011") return "mbru";
+    if (codigo == "0100") return "sp";
+    if (codigo == "0101") return "lv";
+    if (codigo == "0110") return "cpp";
+    if (codigo == "0111") return "tos";
+    if (codigo == "1000") return "opc";
+    return "???";
 }
 
 string get_barramentoB(string codigo){
@@ -187,7 +148,8 @@ string get_barramentoB(string codigo){
         string complemento = "000000000000000000000000" + registrador_MBR.to_string();
         return complemento;
     } else if (codigo == "0011") {
-        return registrador_MAR.to_string();
+        string complemento = "111111111111111111111111" + registrador_MBR.to_string();
+        return complemento;
     } else if (codigo == "0100") {
         return registrador_SP.to_string();
     } else if (codigo == "0101") {
@@ -203,41 +165,18 @@ string get_barramentoB(string codigo){
     }
 }
 
-string get_c_bus(){
-    string aux = ir.substr(8, 9);
-
-    string cbus = "";
-    
-    if(aux[0]== '1') {
-        cbus += "h ";
-    }
-    if (aux[1]=='1') {
-        cbus += "opc ";
-    }
-    if (aux[2]=='1') {
-        cbus += "tos ";
-    }
-    if (aux[3]=='1') {
-        cbus += "cpp ";
-    }
-    if (aux[4]=='1') {
-        cbus += "lv ";
-    }
-    if (aux[5]=='1') {
-        cbus += "sp ";
-    }
-    if (aux[6]=='1') {
-        cbus += "pc ";
-    }
-    if (aux[7]=='1') {
-        cbus += "mdr ";
-    }
-    if (aux[8]=='1') {
-        cbus += "mar ";
-    }
-    cbus += ".";
-
-    return cbus;
+string nomeBarramentoC(string codigo) {
+    string s = "";
+    if (codigo[0] == '1') s += "h ";
+    if (codigo[1] == '1') s += "opc ";
+    if (codigo[2] == '1') s += "tos ";
+    if (codigo[3] == '1') s += "cpp ";
+    if (codigo[4] == '1') s += "lv ";
+    if (codigo[5] == '1') s += "sp ";
+    if (codigo[6] == '1') s += "pc ";
+    if (codigo[7] == '1') s += "mdr ";
+    if (codigo[8] == '1') s += "mar ";
+    return s;
 }
 
 void set_barramentoC(string codigo, string saida_ula){
@@ -255,7 +194,7 @@ void set_barramentoC(string codigo, string saida_ula){
         registrador_CPP = bitset<32>(saida_ula);
     }
     if (codigo[4]=='1') {
-    registrador_LV = bitset<32>(saida_ula);
+        registrador_LV = bitset<32>(saida_ula);
     }
     if (codigo[5]=='1') {
         registrador_SP = bitset<32>(saida_ula);
@@ -318,7 +257,6 @@ void regitrarArquivoInicial(){
         arquivo << "H = " << registrador_H << endl;
         arquivo << "\n============================================================" << endl;
         arquivo << "Start of Program" << endl;
-        //arquivo << "============================================================" << endl;
 
     } else {
         cerr << "Erro ao abrir o arquivo para escrita.\n";
@@ -330,28 +268,12 @@ void registrarArquivoAntes(){
     ofstream arquivo("saida_etapa2_tarefa2.txt", ios::app);
     if (arquivo.is_open()) {
 
-        // if(PC == 1) {
-        // arquivo << "> Initial Registers" << endl;
-        // arquivo << "MAR = " << registrador_MAR << endl;
-        // arquivo << "MDR = " << registrador_MDR << endl;
-        // arquivo << "PC = " << registrador_PC << endl;
-        // arquivo << "MBR = " << registrador_MBR << endl;
-        // arquivo << "SP = " << registrador_SP << endl;
-        // arquivo << "LV = " << registrador_LV << endl;
-        // arquivo << "CPP = " << registrador_CPP << endl;
-        // arquivo << "TOS = " << registrador_TOS << endl;
-        // arquivo << "OPC = " << registrador_OPC << endl;
-        // arquivo << "H = " << registrador_H << endl;
-        // arquivo << "\n============================================================" << endl;
-        // arquivo << "Start of Program" << endl;
-        // }
-
         arquivo << "============================================================" << endl;
         arquivo << "Cycle " << PC << "\n";
         arquivo << "ir = " << ir.substr(0, 8) << " " << ir.substr(8, 9) << " "<< ir.substr(17, 4) << endl;
 
-        //arquivo << "\nb_bus = " << get_b_bus << endl;
-        //arquivo << "c_bus = " << get_c_bus << "\n\n";
+        arquivo << "\nb_bus = " << nomeBarramentoB(ir.substr(17, 4)) << endl;
+        arquivo << "c_bus = " << nomeBarramentoC(ir.substr(8, 9)) << "\n\n";
 
         arquivo << "> Registers before instruction" << endl;
         arquivo << "MAR = " << registrador_MAR << endl;

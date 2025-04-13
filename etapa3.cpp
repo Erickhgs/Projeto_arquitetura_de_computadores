@@ -89,7 +89,7 @@ class Mic1 {
             if (codigo == "0000") return "mdr";
             if (codigo == "0001") return "pc";
             if (codigo == "0010") return "mbr";
-            if (codigo == "0011") return "mar";
+            if (codigo == "0011") return "mbru";
             if (codigo == "0100") return "sp";
             if (codigo == "0101") return "lv";
             if (codigo == "0110") return "cpp";
@@ -100,8 +100,8 @@ class Mic1 {
         bitset<32> valorBarramentoB(string codigo) {
             if (codigo == "0000") return MDR;
             if (codigo == "0001") return PC;
-            if (codigo == "0010") return bitset<32>(string(24, '0') + MBR.to_string()); // MBRU
-            if (codigo == "0011") return MAR;
+            if (codigo == "0010") return bitset<32>(string(24, '0') + MBR.to_string()); 
+            if (codigo == "0011") return bitset<32>(string(24, '1') + MBR.to_string()); // MBRU
             if (codigo == "0100") return SP;
             if (codigo == "0101") return LV;
             if (codigo == "0110") return CPP;

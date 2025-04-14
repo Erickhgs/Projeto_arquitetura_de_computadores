@@ -178,4 +178,7 @@ int main() {
     }
     log << "=====================================================\n";
     log << "Cycle " << ciclo << "\nNo more lines, EOP.\n";
+
+    arq.close();
+    log.close();
 }

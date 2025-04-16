@@ -5,7 +5,7 @@
 #include <bitset>
 #include <sstream>
 #include <stdexcept>
-#include "etapa3.cpp" // reutiliza a classe Mic1 do seu projeto existente
+#include "Mic.h" // reutiliza a classe Mic1 do seu projeto existente
 
 using namespace std;
 
@@ -99,5 +99,8 @@ int main() {
 
     log << "=====================================================\n";
     log << "Cycle " << ciclo << "\nNo more lines, EOP.\n";
+
+    microin.close();
+    log.close();
     return 0;
 }

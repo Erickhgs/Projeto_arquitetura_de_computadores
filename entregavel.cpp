@@ -84,17 +84,41 @@ int main() {
 
     // Executa a Mic-1 com as microinstruções geradas
     ifstream microin("microinstrucoes_etapa3_tarefa2.txt");
-    ofstream log("saida_etapa_final.txt");
+    ofstream log("saida_etapa_final.txt", ios::trunc);
     Mic1 mic;
     mic.carregarRegistradores("registradores_etapa3_tarefa1.txt");
     mic.imprimirEstadoInicial(log);
-    
-    string instr;
+
     int ciclo = 1;
+    int instrucaoContador = 1;
+    ifstream original("teste.txt");
+    string linhaOriginal;
+    vector<int> instrucoesTamanho;
+
+    while (getline(original, linhaOriginal)) {
+        if (linhaOriginal.empty()) continue;
+        stringstream ss(linhaOriginal);
+        string instrucao, argumento;
+        ss >> instrucao >> argumento;
+        vector<string> microinstr = traduzInstrucaoIJVM(instrucao, argumento);
+        instrucoesTamanho.push_back(microinstr.size());
+    }
+    original.close();
+
+    string instr;
+    int microInstrRestantes = 0;
+    size_t idxInstrucao = 0;
+
     while (getline(microin, instr)) {
-        if (instr.size() == 23) {
-            mic.executarInstrucao(instr, ciclo++, log);
+        if (instr.size() != 23) continue;
+
+        if (microInstrRestantes == 0 && idxInstrucao < instrucoesTamanho.size()) {
+            log << "==================== Instrução " << instrucaoContador++ << " ====================\n";
+            microInstrRestantes = instrucoesTamanho[idxInstrucao++];
         }
+
+        mic.executarInstrucao(instr, ciclo++, log);
+        microInstrRestantes--;
     }
 
     log << "=====================================================\n";
